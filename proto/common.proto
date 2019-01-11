@@ -1,0 +1,28 @@
+// Copyright 2018 doctorwechat
+//
+// Author: juzhongguoji <juzhongguoji@hotmail.com>
+// Date:   2018/12/16
+
+syntax = "proto3";
+
+package OnlineConsultant;
+
+enum ClientType {
+  Reserve = 0;
+  H5Client = 10001;            //普通H5
+  MiniProgramClient = 10002;   //小程序
+  MPClient = 10003;            //公众号
+  APPClient = 10004;           //APP
+}
+
+enum RetcodeType {
+  //------------ common ---------------
+  RetSuccess = 0; //成功
+  //------------ system 4xxxxx ---------------
+  RetUnknowError = 400001;   //未知错误
+  RetBadRequest = 400400;    //请求格式错误
+  RetNotFound = 400404;      //请求地址不存在
+  RetServerError = 400504;   //请求后端服务错误
+  //------------- access 5xxxxx --------
+  RetServerUnreachable = 500504;   //后端服务不可达
+}

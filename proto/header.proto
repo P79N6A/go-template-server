@@ -1,0 +1,97 @@
+// Copyright 2018 doctorwechat
+//
+// Author: juzhongguoji <juzhongguoji@hotmail.com>
+// Date:   2018/12/16
+
+syntax = "proto3";
+
+package OnlineConsultant;
+
+/*
+  NOTE@20181117(juzhongguoji): 协议约定
+  1. 后台服务接口约定
+  (1) 接口原型: int返回值+4个参数, 例如
+    int Foo(RequestHeader request_header, FooRequest request, 
+        out ResponseHeader response_header, out FooResponse response);
+  (2) 命名约定:
+    a. 参数名需与原型定义一致(request_header/request/response_header/response), 否则不能接入自动监控
+    b. 请求结构体和响应结构体分别在接口名后增加Request和Response
+  (3) request或者response内容为空时需填入无意义的optional字段。例如:
+    struct XXXRequest {
+        255 optional bool dummy; //255为最大tag值，所以当有真实业务参数时可删除此字段并从0开始。设置bool是为了减少传递的数据
+    };
+  2. 前端接口约定
+  前端使用形如以下描述的HTTP请求访问后台接口
+  (1) URL: /cgi-bin/version/app/server/servant/fucntion, 其中
+    version - 格式为vN，例如v1，表示接口版本，可用于区分接入层
+    app - taf/tars中的应用，对应jce文件中的module(app_server_servant)中的app
+    server - 服务名，对应jce文件中的module(app_server_servant)中的server
+    service - 对应jce文件中的interface名称
+    function - 对应jce文件中的interface里定义的函数
+  (2) Content: JSON字符串，header对应接口中的request_header参数内容，data对应request 
+      {
+          "header": { // 此header非HTTP header
+              ......
+          },
+          "data": {
+              ......
+          }
+      }
+  (3) Response: JSON字符串，顶层json为response_header，内嵌data字段对应response
+      {
+          "header": {
+            "retcode" : int,
+            "retmsg" : string,
+            "request_id": string, // 对应request_header中的request_id
+          },
+          "data": {
+              ......
+          }
+      }
+*/
+
+import "common.proto";
+
+// AccessServer可识别header，用于外部请求
+message AccessRequestHeader {
+  //设备id
+  string client_id = 1;
+  //来源
+  ClientType client_type = 2;
+  //版本号x.y.z，与请求url中的版本不同，此版本为业务协议版本
+  string version = 3;
+  //token
+  string token = 4;
+}
+    
+message AccessResponseHeader {
+  //业务返回码
+  int32 retcode = 1;
+  //业务返回消息
+  string retmsg = 2;
+  //请求id
+  string request_id = 3; 
+}
+
+// 用于内部RPC请求
+message RequestHeader {
+  //请求id
+  string request_id = 1;
+  //设备id
+  string client_id = 2;
+  //来源
+  ClientType client_type = 3;
+  //版本号x.y.z，与请求url中的版本不同，此版本为业务协议版本
+  string version = 4;
+  //测试标志位
+  bool test_flag = 5;
+}
+    
+message ResponseHeader {
+  //业务返回码
+  RetcodeType retcode = 1;
+  //业务返回消息
+  string retmsg = 2;
+  //请求id
+  string request_id = 3; 
+}

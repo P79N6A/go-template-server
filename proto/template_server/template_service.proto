@@ -1,0 +1,44 @@
+// Copyright 2018 doctorwechat
+//
+// Author: juzhongguoji <juzhongguoji@hotmail.com>
+// Date:   2018/12/12
+
+syntax = "proto3";
+
+package OnlineConsultant.TemplateServer;
+
+import "online_consultant/proto/header.proto";
+
+// Interface exported by the server.
+service TemplateService {
+  /* 
+	 * !!!!!!!!!!!! WARNING !!!!!!!!!!!!
+	 * Please not remove or modify comment 
+	 * below, it's anchor for new code
+	 */
+	// ############ INTERFACE ############
+  rpc Test(TestRequest) returns (TestResponse) {}
+}
+
+/* 
+ * !!!!!!!!!!!! WARNING !!!!!!!!!!!!
+ * Please not remove or modify comment 
+ * below, it's anchor for new code
+ */
+// ############ REQUEST ############
+message TestRequest {
+  OnlineConsultant.RequestHeader header = 1;
+  TestRequestData data = 2;
+}
+message TestResponse {
+  OnlineConsultant.ResponseHeader header = 1;
+  TestResponseData data = 2;
+}
+message TestRequestData {
+  // Define data field here
+  int32 dummy = 1;
+}
+message TestResponseData {
+  // Define data field here
+  int32 dummy = 1;
+}
